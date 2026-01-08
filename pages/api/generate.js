@@ -100,6 +100,16 @@ export default async function handler(req, res) {
     };
 
     const yearsOfExperience = calculateYears(profileData.experience);
+    
+    // Format years of experience: if over 10, show "over 10 years" instead of exact number
+    const formatYearsOfExperience = (years) => {
+      if (years > 10) {
+        return "over 10 years";
+      }
+      return `${years} years`;
+    };
+    
+    const formattedYears = formatYearsOfExperience(yearsOfExperience);
 
     // AI PROMPT: Generate ATS-optimized resume content as JSON
     const prompt = `You are a world-class ATS optimization expert. Create a resume that scores 95-100% on ATS.
@@ -113,7 +123,7 @@ Format: {"title":"...","summary":"...","skills":{...},"experience":[...]}
 ## PROFILE DATA:
 **Candidate:** ${profileData.name}
 **Contact:** ${profileData.email} | ${profileData.phone} | ${profileData.location}
-**Experience:** ${yearsOfExperience} years
+**Experience:** ${formattedYears}
 
 **WORK HISTORY:**
 ${profileData.experience.map((job, idx) => {
@@ -166,7 +176,7 @@ Analyze JD "About Us" section for **10-15 domain/compliance keywords** specific 
 ### **3. SUMMARY** (5-6 lines, 8-12 JD keywords + 3-5 domain keywords)
 
 **Structure:**
-- **Line 1:** [JD Title] with ${yearsOfExperience}+ years in [domain from JD] across startup and enterprise environments
+- **Line 1:** [JD Title] with ${formattedYears} in [domain from JD] across startup and enterprise environments
 - **Line 2:** Expertise in [domain keyword] + [3-4 EXACT JD technologies WITH versions if specified]
 - **Line 3:** Proven track record in [domain keyword] + [key achievement with metric: %, $, time, scale]
 - **Line 4:** Proficient in [3-4 more JD technologies/methodologies]
